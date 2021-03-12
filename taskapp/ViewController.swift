@@ -34,18 +34,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
-        
+        //filterはrealmの機能の一つで、指定した条件でデータを抽出するというメソッド
         let predicate = NSPredicate(format: "category = %@", searchBar.text!)
         taskArray = realm.objects(Task.self).filter(predicate)
         
         tableView.reloadData()
-        
+        print(taskArray)
+        print(searchBar.text)
         print("検索ボタンおしたら入った")
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar){
+            searchBar.setShowsCancelButton(true, animated: true)
+        }
+
+    //Cancelボタンが押された時に呼ばれる
+       func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+       
+        
+        taskArray = try! Realm().objects(Task.self).sorted(byKeyPath: "date", ascending: true)
+        tableView.reloadData()
+       }
     
-    
-    override func viewDidLoad() {
+override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
